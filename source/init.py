@@ -14,7 +14,7 @@ if __name__ == "__main__":
     
     #
     
-    input_image = (500, 500)
+    input_image = (450, 450)
     seq_image = 10
     
     #
