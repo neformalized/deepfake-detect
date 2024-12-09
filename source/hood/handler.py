@@ -107,7 +107,7 @@ class Handler():
     
     def evaluate(self):
         
-        if not self.dataset_validation_path: return
+        if len(self.dataset_validation.data) == 0: return
         
         print("-------------------------------")
         

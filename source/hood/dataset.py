@@ -6,6 +6,8 @@ class Dataset:
         
         self.data = list()
         
+        if not dataset_path: return
+        
         for label in os.listdir(dataset_path):
             
             target_dir = dataset_path + str(label) + "/"

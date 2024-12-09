@@ -4,8 +4,6 @@ def process(image_path, target_size):
     
     frames = list()
     
-    print(image_path)
-    
     for image in os.listdir(image_path):
     
         image = cv2.imread(image_path + image, cv2.IMREAD_GRAYSCALE)
