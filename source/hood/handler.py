@@ -146,9 +146,9 @@ class Handler():
             
             new_lr = self.model.optimizer.learning_rate * 0.76
             
-            self.model.optimizer.learning_rate = new_lr
+            #self.model.optimizer.learning_rate = new_lr
             
-            print("new learning_rate: {:.6f}".format(new_lr.numpy()))
+            #print("new learning_rate: {:.6f}".format(new_lr.numpy()))
         #
         
         if(self.loss_train_current < self.loss_train_record): self.loss_train_record = self.loss_train_current
