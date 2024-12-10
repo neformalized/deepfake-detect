@@ -52,20 +52,7 @@ class Handler():
         
         size_init = self.buffer_size if self.buffer_size > 0 else len(self.dataset_train.data)
         
-        self.buffer_train = buffer.Dual(size_init, self.seq_image, self.input_image, self.output_labels)
-        
-        if(self.buffer_size == 0):
-            
-            self.buffer_load(self.dataset_train.data, self.buffer_train)
-        #
-        
-        #
-        
-        if(len(self.dataset_validation.data) > 0):
-            
-            self.buffer_validation = buffer.Dual(len(self.dataset_validation.data), self.seq_image, self.input_image, self.output_labels)
-            self.buffer_load(self.dataset_validation.data, self.buffer_validation)
-        #
+        self.buffer = buffer.Dual(size_init, self.seq_image, self.input_image, self.output_labels)
     #
     
     def start(self):
@@ -97,23 +84,7 @@ class Handler():
             self.updates()
         #
     #
-    
-    def fit(self):
-        
-        print("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=")
-        
-        self.fit_full() if(self.buffer_size == 0) else self.fit_parts()
-    #
-    
-    def evaluate(self):
-        
-        if len(self.dataset_validation.data) == 0: return
-        
-        print("-------------------------------")
-        
-        self.loss_validation_current = self.model.evaluate(self.buffer_validation.x, self.buffer_validation.y, batch_size = 1)
-    #
-    
+
     def checkpoint(self):
         
         self.model.save(self.save_path + "model.keras")
@@ -174,19 +145,8 @@ class Handler():
             target_buffer.put(i, x, y)
         #
     #
-    
-    def fit_full(self):
-        
-        print("epoch#{}".format(self.epoch))
-        
-        #
-        
-        self.loss_train_current = self.model.fit(self.buffer_train.x, self.buffer_train.y, batch_size = 1, epochs = 1).history["loss"][0]
-        
-        #
-    #
 
-    def fit_parts(self):
+    def fit(self):
         
         print("epoch#{}".format(self.epoch))
         
@@ -208,7 +168,7 @@ class Handler():
             
             #
             
-            self.buffer_load(self.dataset_train.data[start: end], self.buffer_train)
+            self.buffer_load(self.dataset_train.data[start: end], self.buffer)
             
             #
             
@@ -220,5 +180,41 @@ class Handler():
         self.loss_train_current = sum(losses)/len(losses)
         
         #
+    #
+    
+    def evaluate(self):
+        
+        if len(self.dataset_validation.data) == 0: return
+        
+        print("-------------------------------")
+        
+        evaluate_len = len(self.dataset_validation.data)
+        
+        losses = []
+        
+        for start in range(0, evaluate_len, self.buffer_size):
+            
+            end = min(start + self.buffer_size, evaluate_len)
+            
+            #
+            
+            print("step {} from {}".format([start, end], evaluate_len))
+            
+            #
+            
+            self.buffer_load(self.dataset_validation.data[start: end], self.buffer)
+            
+            #
+            
+            losses.append(self.model.evaluate(self.buffer_validation.x[0: end - start], self.buffer_validation.y[0: end - start], batch_size = 1))
+            
+            #
+        #
+        
+        self.loss_validation_current = sum(losses)/len(losses)
+        
+        #
+        
+        print(f"validation {self.loss_train_current}")
     #
 #
