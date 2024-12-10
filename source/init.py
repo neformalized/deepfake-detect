@@ -10,7 +10,7 @@ if __name__ == "__main__":
     
     #
     
-    buffer_size = 20 # 0 whole dataset without reloads
+    buffer_size = 1000 # 0 whole dataset without reloads
     
     #
     

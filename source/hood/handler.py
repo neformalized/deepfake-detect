@@ -50,9 +50,7 @@ class Handler():
         
         #
         
-        size_init = self.buffer_size if self.buffer_size > 0 else len(self.dataset_train.data)
-        
-        self.buffer = buffer.Dual(size_init, self.seq_image, self.input_image, self.output_labels)
+        self.buffer = buffer.Dual(self.buffer_size, self.seq_image, self.input_image, self.output_labels)
     #
     
     def start(self):
@@ -172,7 +170,7 @@ class Handler():
             
             #
             
-            losses.append(self.model.fit(self.buffer_train.x[0: end - start], self.buffer_train.y[0: end - start], batch_size = 1, epochs = 1).history["loss"][0])
+            losses.append(self.model.fit(self.buffer.x[0: end - start], self.buffer.y[0: end - start], batch_size = 1, epochs = 1).history["loss"][0])
             
             #
         #
@@ -186,9 +184,15 @@ class Handler():
         
         if len(self.dataset_validation.data) == 0: return
         
+        #
+        
         print("-------------------------------")
         
+        #
+        
         evaluate_len = len(self.dataset_validation.data)
+        
+        #
         
         losses = []
         
@@ -206,7 +210,7 @@ class Handler():
             
             #
             
-            losses.append(self.model.evaluate(self.buffer_validation.x[0: end - start], self.buffer_validation.y[0: end - start], batch_size = 1))
+            losses.append(self.model.evaluate(self.buffer.x[0: end - start], self.buffer.y[0: end - start], batch_size = 1))
             
             #
         #
