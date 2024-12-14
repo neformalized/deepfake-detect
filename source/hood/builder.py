@@ -11,17 +11,17 @@ def create(input_shape, output_shape):
     
     model.add(Input(shape=input_shape))
     
-    model.add(Conv3D(8, (3, 3, 3), activation='relu', padding='same'))
+    model.add(Conv3D(8, (4, 4, 4), padding='same'))
     model.add(BatchNormalization())
     model.add(Activation('relu'))
     model.add(MaxPooling3D(pool_size=(2, 2, 2)))
     
-    model.add(Conv3D(16, (3, 3, 3), activation='relu', padding='same'))
+    model.add(Conv3D(16, (4, 4, 4), padding='same'))
     model.add(BatchNormalization())
     model.add(Activation('relu'))
     model.add(MaxPooling3D(pool_size=(2, 2, 2)))
     
-    model.add(Conv3D(32, (3, 3, 2), activation='relu', padding='same'))
+    model.add(Conv3D(16, (4, 4, 2), padding='same'))
     model.add(BatchNormalization())
     model.add(Activation('relu'))
     model.add(MaxPooling3D(pool_size=(2, 2, 2)))
@@ -33,7 +33,7 @@ def create(input_shape, output_shape):
     
     ###
     
-    optimizer = Adam(learning_rate = 0.001)
+    optimizer = Adam(learning_rate = 0.0005)
     model.compile(optimizer = optimizer, loss = "binary_crossentropy")
     
     ###
